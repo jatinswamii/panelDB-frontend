@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { memo } from "react";
 import { useState } from "react";
 import {
   Box,
@@ -36,6 +36,8 @@ const DbApp = () => {
     jobDetails: {},
     achievements: {},
   });
+
+  console.log(formData,"form data")
 
   const totalSteps = () => steps.length;
   const completedSteps = () => Object.keys(completed).length;
@@ -98,8 +100,8 @@ const DbApp = () => {
         ) : (
           <>
             <Box sx={{ mt: 4 }}>
-              {activeStep === 0 && <PersonalDetails setData={setFormdata} />}
-              {activeStep === 1 && <Address />}
+              {activeStep === 0 && <PersonalDetails allData={formData} setData={setFormdata} />}
+              {activeStep === 1 && <Address allData={formData} setData={setFormdata}/>}
               {activeStep === 2 && <Educationqualification />}
               {activeStep === 3 && <Jobinformation />}
               {activeStep === 4 && <Achievements />}
@@ -141,4 +143,8 @@ const DbApp = () => {
   );
 };
 
-export default DbApp;
+const MemoizedDbApp = memo(DbApp);
+MemoizedDbApp.displayName = 'DbApp';
+
+export default MemoizedDbApp;
+export { MemoizedDbApp };
