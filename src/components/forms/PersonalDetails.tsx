@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Container,
@@ -80,6 +80,8 @@ const PersonalDetails = (props: any) => {
     { value: "no", label: "No" },
   ];
 
+  const [maritalStatusInput,setMaritalStatusInput] = useState('');
+
   const {
     register,
     handleSubmit,
@@ -92,7 +94,7 @@ const PersonalDetails = (props: any) => {
   };
   console.log(errors,"errors");
 
-  const maritalStatusChange = (e: any) => console.log(e.target.value, "yoyto");
+  const handleMaritalStatusChange = (e: any) => setMaritalStatusInput(e.target.value);
 
   const handleUppercase = (e: any) => {
     const uppercaseValue = e.target.value.toUpperCase();
@@ -335,7 +337,7 @@ const PersonalDetails = (props: any) => {
                 label="Select Marital Status"
                 variant="outlined"
                 {...register("maritalStatus", {
-                  onChange: maritalStatusChange,
+                  onChange: handleMaritalStatusChange,
                   required: true,
                 })}
                 error={errors.maritalStatus?true:false}
@@ -348,7 +350,7 @@ const PersonalDetails = (props: any) => {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={12} md={6}>
+           {maritalStatusInput!=="" && <Grid item xs={12} md={6}>
               <Typography variant="subtitle1">Spouse Name</Typography>
               <TextField
                 size="small"
@@ -364,7 +366,7 @@ const PersonalDetails = (props: any) => {
                 error={errors.spouseName?true:false}
                 helperText={errors.spouseName?'enter a valid name':''}
               />
-            </Grid>
+            </Grid>}
             <Grid item xs={12}>
               <Divider />
             </Grid>
