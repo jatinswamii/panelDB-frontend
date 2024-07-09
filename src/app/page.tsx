@@ -1,5 +1,5 @@
 "use client";
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { useState } from "react";
 import {
   Box,
@@ -15,6 +15,9 @@ import Jobinformation from "@/components/forms/Jobinformation";
 import Educationqualification from "@/components/forms/Educationqualification";
 import Declarationinfo from "@/components/forms/Declarationinfo";
 import PersonalDetails from "@/components/forms/PersonalDetails";
+
+import axios from "axios";
+
 
 const DbApp = () => {
   const steps = [
@@ -36,8 +39,79 @@ const DbApp = () => {
     jobDetails: {},
     achievements: {},
   });
+  const [masterData, setMasterData] = useState<{
+    Countries: any[],
+    Initials: any[],
+    Gender: any[],
+    IdProof: any[],
+    MaritalStatus: any[],
+    Community: any[],
+    Languages: any[],
+    BloodGroup: any[],
+    State: any[],
+    District: any[]
+  }>({
+    Countries: [],
+    Initials: [],
+    Gender: [],
+    IdProof: [],
+    MaritalStatus: [],
+    Community: [],
+    Languages: [],
+    BloodGroup: [],
+    State: [],
+    District: []
+  });
 
-  console.log(formData,"form data")
+  const url = 'http://localhost:8100/MDM/API/v1/master_data';
+
+  const commonAPIcall = async (url: string, id: number) => {
+    const res = await axios.get(`${url}?masterId=${id}`);
+    return res.data.data;
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const countries = await commonAPIcall(url, 1);
+        const initials = await commonAPIcall(url, 23);
+        // console.log(initials,'initials..............')
+        const gender = await commonAPIcall(url, 9);
+        const idProof = await commonAPIcall(url, 24);
+        const maritalStatus = await commonAPIcall(url, 10);
+        const community = await commonAPIcall(url, 20);
+        const bloodGroup = await commonAPIcall(url, 21);
+        const languages = await commonAPIcall(url, 11);
+        const state = await commonAPIcall(url, 2);
+        const district = await commonAPIcall(url, 3);
+
+
+
+
+        setMasterData({
+          Countries: countries,
+          Initials: initials,
+          Gender: gender,
+          IdProof: idProof,
+          MaritalStatus: maritalStatus,
+          Community: community,
+          Languages: languages,
+          BloodGroup: bloodGroup,
+          State: state,
+          District: district
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    getData();
+  }, []);
+
+
+
+
+
+  console.log(formData, "form data")
 
   const totalSteps = () => steps.length;
   const completedSteps = () => Object.keys(completed).length;
@@ -100,8 +174,24 @@ const DbApp = () => {
         ) : (
           <>
             <Box sx={{ mt: 4 }}>
-              {activeStep === 0 && <PersonalDetails allData={formData} setData={setFormdata} />}
-              {activeStep === 1 && <Address allData={formData} setData={setFormdata}/>}
+              {activeStep === 0 && <PersonalDetails
+                initials={masterData.Initials}
+                gender={masterData.Gender}
+                idProof={masterData.IdProof}
+                maritalStatus={masterData.MaritalStatus}
+                community={masterData.Community}
+                bloodGroup={masterData.BloodGroup}
+                languages={masterData.Languages}
+              />}
+              {activeStep === 1 && <Address
+                allData={formData}
+                setData={setFormdata}
+                state={masterData.State}
+
+                district={masterData.District}
+                countries={masterData.Countries}
+
+              />}
               {activeStep === 2 && <Educationqualification />}
               {activeStep === 3 && <Jobinformation />}
               {activeStep === 4 && <Achievements />}

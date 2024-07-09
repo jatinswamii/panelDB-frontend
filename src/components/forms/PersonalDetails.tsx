@@ -33,54 +33,17 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const PersonalDetails = (props: any) => {
-  const initials = [
-    { value: "mr.", label: "Mr." },
-    { value: "mrs.", label: "Mrs." },
-    { value: "dr.", label: "Dr." },
-    { value: "miss.", label: "Miss." },
-  ];
-  const gender = [
-    { value: "male", label: "Male" },
-    { value: "female", label: "Female" },
-    { value: "transgender", label: "Transgender" },
-  ];
-  const bloodGroup = [
-    { value: "a+", label: "A+" },
-    { value: "a-", label: "A-" },
-    { value: "b+", label: "B+" },
-    { value: "b-", label: "B-" },
-    { value: "ab+", label: "AB+" },
-    { value: "ab-", label: "AB-" },
-  ];
-  const idProof = [
-    { value: "aadhar card", label: "Aadhar Card" },
-    { value: "driving license", label: "Driving License" },
-    { value: "passport", label: "Passport" },
-  ];
-  const community = [
-    { value: "general", label: "General" },
-    { value: "obc", label: "OBC" },
-    { value: "sc", label: "SC" },
-    { value: "st", label: "ST" },
-  ];
-  const languages = [
-    { value: "hindi", label: "Hindi" },
-    { value: "english", label: "English" },
-    { value: "german", label: "German" },
-    { value: "french", label: "French" },
-  ];
-  const leveloflanguages = [
-    { value: "beginner", label: "Beginner" },
-    { value: "intermediate", label: "Intermediate" },
-    { value: "advanced", label: "Advanced" },
-    { value: "expert", label: "Expert" },
-  ];
-  const maritalStatus = [
-    { value: "yes", label: "Yes" },
-    { value: "no", label: "No" },
-  ];
 
-  const [maritalStatusInput,setMaritalStatusInput] = useState('');
+  const [selectedInitials, setSelectedInitials] = useState('');
+  const [selectedGender, setSelectedGender] = useState('');
+  const [selectedIdProof, setSelectedIdProof] = useState('')
+  const [selectedMaritalStatus, setSelectedMaritalStatus] = useState('')
+  const [selectedCommunity, setSelectedCommunity] = useState('');
+  const [selectedBloodGroup, setSelectedBloodGroup] = useState('');
+  const [selectedLanguages, setSelectedLanguages] = useState('');
+
+
+
 
   const {
     register,
@@ -92,9 +55,9 @@ const PersonalDetails = (props: any) => {
   const onSubmit = (data: any) => {
     props.setData({ ...props.allData, personalInformation: data });
   };
-  console.log(errors,"errors");
+  console.log(errors, "errors");
 
-  const handleMaritalStatusChange = (e: any) => setMaritalStatusInput(e.target.value);
+  // const handleMaritalStatusChange = (e: any) => setMaritalStatusInput(e.target.value);
 
   const handleUppercase = (e: any) => {
     const uppercaseValue = e.target.value.toUpperCase();
@@ -148,19 +111,30 @@ const PersonalDetails = (props: any) => {
                 Initials
               </Typography>
               <TextField
-                size="small"
+                size='small'
                 fullWidth
-                label="Select"
                 select
-                {...register("initials", { required: true })}
-                error={errors.initials?true:false}
-                helperText={errors.initials?'required':''}
+                label="Select initials"
+                variant="outlined"
+                value={selectedInitials}
+                onChange={(e) => setSelectedInitials(e.target.value)
+
+
+                }
               >
-                {initials.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+                {console.log(props.initials, '1234')}
+                {props.initials &&
+                  props.initials.length > 0 &&
+                  props.initials[0].data.map((initial: any, i:number) => {
+                    // console.log(props.initials, 'hhhhhh')
+                    console.log(initial, i); // <-- Insert console.log here
+
+                    return (
+                      <MenuItem key={initial.value} value={initial.Initial_Id}>
+                        {initial.Initial_Name_En}
+                      </MenuItem>
+                    );
+                  })}
               </TextField>
             </Grid>
             <Grid item xs={7} md={9}>
@@ -178,27 +152,35 @@ const PersonalDetails = (props: any) => {
                   onChange: handleUppercase,
                   pattern: nameValidation,
                 })}
-                error={errors.fullName?true:false}
-                helperText={errors.fullName?'enter a valid name':''}
+                error={errors.fullName ? true : false}
+                helperText={errors.fullName ? 'enter a valid name' : ''}
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="subtitle1">Gender</Typography>
+              <Typography variant="subtitle1" sx={{ mr: 2 }}>
+                Gender
+              </Typography>
+
               <TextField
-                size="small"
+                size='small'
                 fullWidth
                 select
-                label="Select Gender"
+                label="Select gender"
                 variant="outlined"
-                {...register("gender", { required: true })}
-                error={errors.gender?true:false}
-                helperText={errors.gender?'required':''}
+                value={selectedGender}
+                onChange={(e) => setSelectedGender(e.target.value)}
               >
-                {gender.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+               {props.gender &&
+                  props.gender.length > 0 &&
+                  props.gender[0].data.map((gender: any, i:number) => {
+                    console.log(gender, i); 
+
+                    return (
+                      <MenuItem key={gender.value} value={gender.genderId}>
+                        {gender.genderNameEn}
+                      </MenuItem>
+                    );
+                  })}
               </TextField>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -208,6 +190,7 @@ const PersonalDetails = (props: any) => {
                 {...register("dob", { required: true })}
               >
                 <DatePicker
+
                   sx={{
                     "& .MuiInputBase-root": {
                       height: "40px",
@@ -226,23 +209,25 @@ const PersonalDetails = (props: any) => {
               <Typography variant="subtitle1">ID Proof</Typography>
               <Box display="flex" alignItems="center">
                 <TextField
-                  size="small"
+                  size='small'
                   fullWidth
                   select
-                  label="Select ID "
+                  label="Select Id Proof"
                   variant="outlined"
-                  {...register("IDProof", {
-                    required: true,
-                    onChange: handleUppercase,
-                  })}
-                  error={errors.IDProof?true:false}
-                  helperText={errors.IDProof?'required':''}
+                  value={selectedIdProof}
+                  onChange={(e) => setSelectedIdProof(e.target.value)}
                 >
-                  {idProof.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
+                   {props.idProof &&
+                  props.idProof.length > 0 &&
+                  props. idProof[0].data.map(( idProof: any, i:number) => {
+                    console.log( idProof, i); 
+
+                    return (
+                      <MenuItem key={ idProof.value} value={ idProof.identityTypeId}>
+                        { idProof.identityTypeNameEn}
+                      </MenuItem>
+                    );
+                  })}
                 </TextField>
               </Box>
             </Grid>
@@ -258,8 +243,8 @@ const PersonalDetails = (props: any) => {
                       variant="outlined"
                       placeholder="Please Enter ID Proof No."
                       {...register("IDProofNo", { required: true })}
-                      error={errors.IDProofNo?true:false}
-                      helperText={errors.IDProofNo?'enter a valid ID Number':''}
+                      error={errors.IDProofNo ? true : false}
+                      helperText={errors.IDProofNo ? 'enter a valid ID Number' : ''}
                     />
                   </Grid>
                   <Grid item xs={3}>
@@ -276,18 +261,7 @@ const PersonalDetails = (props: any) => {
                 </Grid>
               </Grid>
 
-              {/* <Grid item xs={12} md={3}>
-
-                <Button
-                  component="label"
-                  variant="contained"
-                  startIcon={<CloudUploadIcon />}
-                  sx={{ ml: 2, width: '50%' }}
-                >
-
-                  <VisuallyHiddenInput type="file" />
-                </Button>
-              </Grid> */}
+          
             </Grid>
             <Grid item xs={12}>
               <Divider />
@@ -306,8 +280,8 @@ const PersonalDetails = (props: any) => {
                   minLength: 2,
                   onChange: handleUppercase,
                 })}
-                error={errors.fatherName?true:false}
-                helperText={errors.fatherName?'enter a valid name':''}
+                error={errors.fatherName ? true : false}
+                helperText={errors.fatherName ? 'enter a valid name' : ''}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -324,8 +298,8 @@ const PersonalDetails = (props: any) => {
                   minLength: 2,
                   onChange: handleUppercase,
                 })}
-                error={errors.motherName?true:false}
-                helperText={errors.motherName?'enter a valid name':''}
+                error={errors.motherName ? true : false}
+                helperText={errors.motherName ? 'enter a valid name' : ''}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -336,21 +310,32 @@ const PersonalDetails = (props: any) => {
                 select
                 label="Select Marital Status"
                 variant="outlined"
+                value={selectedMaritalStatus}
                 {...register("maritalStatus", {
-                  onChange: handleMaritalStatusChange,
+                  // onChange: handleMaritalStatusChange,
                   required: true,
                 })}
-                error={errors.maritalStatus?true:false}
-                helperText={errors.maritalStatus?'required':''}
+                onChange={(e) => setSelectedMaritalStatus(e.target.value)}
+
+
+                error={errors.maritalStatus ? true : false}
+                helperText={errors.maritalStatus ? 'required' : ''}
               >
-                {maritalStatus.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+                  {props.maritalStatus &&
+                  props.maritalStatus.length > 0 &&
+                  props. maritalStatus[0].data.map(( maritalStatus: any, i:number) => {
+                    console.log( maritalStatus, i); 
+
+                    return (
+                      <MenuItem key={ maritalStatus.value} value={ maritalStatus.maritalStatusId}>
+                        { maritalStatus.maritalStatusNameEn}
+                      </MenuItem>
+                    );
+                  })}
+
               </TextField>
             </Grid>
-           {maritalStatusInput!=="" && <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="subtitle1">Spouse Name</Typography>
               <TextField
                 size="small"
@@ -363,10 +348,10 @@ const PersonalDetails = (props: any) => {
                   minLength: 2,
                   onChange: handleUppercase,
                 })}
-                error={errors.spouseName?true:false}
-                helperText={errors.spouseName?'enter a valid name':''}
+                error={errors.spouseName ? true : false}
+                helperText={errors.spouseName ? 'enter a valid name' : ''}
               />
-            </Grid>}
+            </Grid>
             <Grid item xs={12}>
               <Divider />
             </Grid>
@@ -384,8 +369,8 @@ const PersonalDetails = (props: any) => {
                   maxLength: 10,
                   minLength: 10,
                 })}
-                error={errors.mobileNo?true:false}
-                helperText={errors.mobileNo?'enter a valid number':''}
+                error={errors.mobileNo ? true : false}
+                helperText={errors.mobileNo ? 'enter a valid number' : ''}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -400,8 +385,8 @@ const PersonalDetails = (props: any) => {
                   required: true,
                   pattern: emailValidation,
                 })}
-                error={errors.emailId?true:false}
-                helperText={errors.emailId?'enter a valid Email ID':''}
+                error={errors.emailId ? true : false}
+                helperText={errors.emailId ? 'enter a valid Email ID' : ''}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -412,15 +397,24 @@ const PersonalDetails = (props: any) => {
                 select
                 label="Select Community"
                 variant="outlined"
+                value={selectedCommunity}
                 {...register("community", { required: true })}
-                error={errors.community?true:false}
-                helperText={errors.community?'required':''}
+                error={errors.community ? true : false}
+                helperText={errors.community ? 'required' : ''}
+                onChange={(e) => setSelectedCommunity(e.target.value)}
+
               >
-                {community.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+             {props.community &&
+                  props.community.length > 0 &&
+                  props. community[0].data.map(( community: any, i:number) => {
+                    console.log( community, i); 
+
+                    return (
+                      <MenuItem key={ community.value} value={ community.communityId}>
+                        {community.communityNameEn}
+                      </MenuItem>
+                    );
+                  })}
               </TextField>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -431,15 +425,24 @@ const PersonalDetails = (props: any) => {
                 select
                 label="Select Language"
                 variant="outlined"
+                value={selectedLanguages}
                 {...register("language", { required: true })}
-                error={errors.language?true:false}
-                helperText={errors.language?'required':''}
+                error={errors.language ? true : false}
+                helperText={errors.language ? 'required' : ''}
+                onChange={(e) => setSelectedLanguages(e.target.value)}
+
               >
-                {languages.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+                {props.languages &&
+                  props.languages.length > 0 &&
+                  props. languages[0].data.map(( languages: any, i:number) => {
+                    console.log(languages, i); 
+
+                    return (
+                      <MenuItem key={ languages.value} value={ languages.motherTongueId}>
+                        {languages.motherTongueNameEn}
+                      </MenuItem>
+                    );
+                  })}
               </TextField>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -451,14 +454,10 @@ const PersonalDetails = (props: any) => {
                 label="Select Level"
                 variant="outlined"
                 {...register("levelOfLanguages", { required: true })}
-                error={errors.levelOfLanguages?true:false}
-                helperText={errors.levelOfLanguages?'required':''}
+                error={errors.levelOfLanguages ? true : false}
+                helperText={errors.levelOfLanguages ? 'required' : ''}
               >
-                {leveloflanguages.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+
               </TextField>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -468,20 +467,29 @@ const PersonalDetails = (props: any) => {
                 fullWidth
                 select
                 label="Select Blood Group"
+                value={selectedBloodGroup}
                 variant="outlined"
                 {...register("bloodGroup", { required: true })}
-                error={errors.bloodGroup?true:false}
-                helperText={errors.bloodGroup?'required':''}
+                error={errors.bloodGroup ? true : false}
+                helperText={errors.bloodGroup ? 'required' : ''}
+                onChange={(e) => setSelectedBloodGroup(e.target.value)}
+
               >
-                {bloodGroup.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+                 {props.bloodGroup &&
+                  props.bloodGroup.length > 0 &&
+                  props. bloodGroup[0].data.map(( bloodGroup: any, i:number) => {
+                    console.log(bloodGroup, i); 
+
+                    return (
+                      <MenuItem key={ bloodGroup.value} value={ bloodGroup.bloodGroupId}>
+                        {bloodGroup.bloodGroup}
+                      </MenuItem>
+                    );
+                  })}
               </TextField>
             </Grid>
           </Grid>
-          <Button onClick={handleSubmit(onSubmit)}>submit</Button>
+          {/* <Button onClick={handleSubmit(onSubmit)}>submit</Button> */}
         </Box>
       </Box>
     </Container>

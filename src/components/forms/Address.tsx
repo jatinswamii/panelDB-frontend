@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Grid,
@@ -11,24 +11,10 @@ import {
 import { useForm } from "react-hook-form";
 
 const Address = (props:any) => {
-  const state = [
-    { value: "uttar pradesh", label: "Uttar Pradesh" },
-    { value: "bihar", label: "Bihar" },
-    { value: "delhi", label: "Delhi" },
-    { value: "gujarat", label: "Gujarat" },
-  ];
-  const district = [
-    { value: "gorakhpur", label: "Gorakhpur" },
-    { value: "patna", label: "Patna" },
-    { value: "lucknow", label: "Lucknow" },
-    { value: "ahmedabad", label: "Ahmedabad" },
-  ];
-  const country = [
-    { value: "australia", label: "Australia" },
-    { value: "india", label: "India" },
-    { value: "argentina", label: "Argentina" },
-    { value: "germany", label: "Germany" },
-  ];
+    const[selectedCountry, setSelectedCountry]= useState('')
+    const[selectedState, setSelectedState]= useState('')
+    const[selectedDistrict, setSelectedDistrict]= useState('')
+
 
   const {
     register,
@@ -110,12 +96,20 @@ const Address = (props:any) => {
                   label="Select State"
                   variant="outlined"
                   {...register("state")}
+                  value={selectedState}
+                  onChange={(e) => setSelectedState(e.target.value)}
                 >
-                  {state.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
+                 {props.state &&
+                  props.state.length > 0 &&
+                  props. state[0].data.map(( state: any, i:number) => {
+                    console.log(state, i); 
+
+                    return (
+                      <MenuItem key={ state.value} value={ state.stateId}>
+                        { state.stateNameEn}
+                      </MenuItem>
+                    );
+                  })}
                 </TextField>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -126,13 +120,21 @@ const Address = (props:any) => {
                   select
                   label="Select District"
                   variant="outlined"
+                  value={selectedDistrict}
                   {...register("district")}
+                  onChange={(e) => setSelectedDistrict(e.target.value)}
                 >
-                  {district.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
+               {props.district &&
+                  props.district.length> 0 &&
+                  props. district[0].data.map(( district: any, i:number) => {
+                    console.log( district, i); 
+
+                    return (
+                      <MenuItem key={ district.value} value={ district.districtId}>
+                        { district.districtNameEn}
+                      </MenuItem>
+                    );
+                  })}
                 </TextField>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -143,13 +145,21 @@ const Address = (props:any) => {
                   select
                   label="Select Country"
                   variant="outlined"
+                  value={selectedCountry}
                   {...register("country")}
+                  onChange={(e)=> setSelectedCountry(e.target.value)}
                 >
-                  {country.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
+                {props.countries &&
+                  props.countries.length> 0 &&
+                  props. countries[0].data.map(( countries: any, i:number) => {
+                    console.log( countries, i); 
+
+                    return (
+                      <MenuItem key={countries.value} value={ countries.countryId}>
+                        { countries.countryNameEn}
+                      </MenuItem>
+                    );
+                  })}
                 </TextField>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -216,12 +226,21 @@ const Address = (props:any) => {
                   select
                   label="Select State"
                   variant="outlined"
+                  {...register("state")}
+                  value={selectedState}
+                  onChange={(e) => setSelectedState(e.target.value)}
                 >
-                  {state.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
+                 {props.state &&
+                  props.state.length > 0 &&
+                  props. state[0].data.map(( state: any, i:number) => {
+                    console.log(state, i); 
+
+                    return (
+                      <MenuItem key={ state.value} value={ state.stateId}>
+                        { state.stateNameEn}
+                      </MenuItem>
+                    );
+                  })}
                 </TextField>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -232,12 +251,21 @@ const Address = (props:any) => {
                   select
                   label="Select District"
                   variant="outlined"
+                  value={selectedDistrict}
+                  {...register("district")}
+                  onChange={(e) => setSelectedDistrict(e.target.value)}
                 >
-                  {district.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
+               {props.district &&
+                  props.district.length> 0 &&
+                  props. district[0].data.map(( district: any, i:number) => {
+                    console.log( district, i); 
+
+                    return (
+                      <MenuItem key={ district.value} value={ district.districtId}>
+                        { district.districtNameEn}
+                      </MenuItem>
+                    );
+                  })}
                 </TextField>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -248,12 +276,21 @@ const Address = (props:any) => {
                   select
                   label="Select Country"
                   variant="outlined"
+                  value={selectedCountry}
+                  {...register("country")}
+                  onChange={(e)=> setSelectedCountry(e.target.value)}
                 >
-                  {country.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
+                {props.countries &&
+                  props.countries.length> 0 &&
+                  props. countries[0].data.map(( countries: any, i:number) => {
+                    console.log( countries, i); 
+
+                    return (
+                      <MenuItem key={countries.value} value={ countries.countryId}>
+                        { countries.countryNameEn}
+                      </MenuItem>
+                    );
+                  })}
                 </TextField>
               </Grid>
               <Grid item xs={12} md={6}>
